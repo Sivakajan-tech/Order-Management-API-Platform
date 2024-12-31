@@ -3,13 +3,13 @@ package com.zerobeta.ordermanagementAPI.Service;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import com.zerobeta.ordermanagementAPI.Repository.OrderRepo;
 import com.zerobeta.ordermanagementAPI.Common.Enums.OrderStatus;
 import com.zerobeta.ordermanagementAPI.DTO.OrderRequestDTO;
+import com.zerobeta.ordermanagementAPI.DTO.OrderResponseDTO;
 import com.zerobeta.ordermanagementAPI.Model.Client;
 import com.zerobeta.ordermanagementAPI.Model.Order;
 
@@ -21,12 +21,18 @@ public class OrderService {
     @Autowired
     private SecurityService securityService;
 
-    public List<Order> getAllOrders() {
-        return orderRepo.findAll();
+    public List<OrderResponseDTO> getAllOrders() {
+        return orderRepo.findAll().stream().map(order -> OrderResponseDTO.fromOrder(order))
+                .collect(Collectors.toList());
     }
 
-    public Order getOrder(UUID id) {
-        return orderRepo.findById(id).orElse(null);
+    public OrderResponseDTO getOrder(UUID id) {
+        Optional<Order> order = orderRepo.findByOrderId(id);
+        if (order == null) {
+            throw new IllegalArgumentException("Order with id " + id + " not found");
+        }
+
+        return OrderResponseDTO.fromOrder(order.get());
     }
 
     public void updateNewOrdersToDispatched() {
@@ -37,27 +43,22 @@ public class OrderService {
         }
     }
 
-    public Order orderOrder(OrderRequestDTO orderRequest) {
+    public OrderResponseDTO createOrder(OrderRequestDTO orderRequest) {
         Client client = securityService.getAuthenticatedClient();
 
-        Order newOrder = new Order();
-        newOrder.setClient(client);
-        newOrder.setOrderName(orderRequest.getName());
-        newOrder.setStatus(OrderStatus.NEW);
-        newOrder.setQuantity(orderRequest.getQuantity());
-        newOrder.setShipping_address(orderRequest.getShippingAddress());
+        Order newOrder = Order.fromOrderRequestDTO(orderRequest, client);
 
-        return orderRepo.save(newOrder);
+        return OrderResponseDTO.fromOrder(orderRepo.save(newOrder));
     }
 
-    public Order cancelOrder(UUID id) {
+    public OrderResponseDTO cancelOrder(UUID id) {
         Optional<Order> order = orderRepo.findByOrderId(id);
 
         if (order.isPresent()) {
             if (order.get().getStatus() == OrderStatus.NEW) {
                 Order newOrder = order.get();
                 newOrder.setStatus(OrderStatus.CANCELLED);
-                return orderRepo.save(newOrder);
+                return OrderResponseDTO.fromOrder(orderRepo.save(newOrder));
             } else {
                 throw new IllegalStateException("Cannot cancel an order that is not in NEW status");
             }

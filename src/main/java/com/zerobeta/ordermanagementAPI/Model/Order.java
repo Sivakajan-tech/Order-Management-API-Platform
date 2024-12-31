@@ -2,9 +2,8 @@ package com.zerobeta.ordermanagementAPI.Model;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
-
 import com.zerobeta.ordermanagementAPI.Common.Enums.OrderStatus;
-
+import com.zerobeta.ordermanagementAPI.DTO.OrderRequestDTO;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -55,4 +54,16 @@ public class Order {
     protected void onCreate() {
         this.createdAt = LocalDateTime.now();
     }
+
+    // Factory method for creating an instance from OrderRequestDTO
+    public static Order fromOrderRequestDTO(OrderRequestDTO orderRequest, Client client) {
+        Order newOrder = new Order();
+        newOrder.setClient(client);
+        newOrder.setOrderName(orderRequest.getName());
+        newOrder.setStatus(OrderStatus.NEW);
+        newOrder.setQuantity(orderRequest.getQuantity());
+        newOrder.setShipping_address(orderRequest.getShipping_address());
+        return newOrder;
+    }
+
 }

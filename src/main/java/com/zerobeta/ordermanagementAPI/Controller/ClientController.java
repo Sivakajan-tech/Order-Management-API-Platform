@@ -15,9 +15,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.zerobeta.ordermanagementAPI.DTO.LoginRequestDTO;
+import com.zerobeta.ordermanagementAPI.DTO.RegisterRequestDTO;
 import com.zerobeta.ordermanagementAPI.Model.Client;
 import com.zerobeta.ordermanagementAPI.Service.ClientService;
 import com.zerobeta.ordermanagementAPI.Service.JWTService;
+
+import org.springframework.transaction.annotation.Transactional;
+import jakarta.validation.Valid;
 
 @RestController
 // @CrossOrigin // This annotation is used to handle the request from a
@@ -49,19 +54,20 @@ public class ClientController {
         return new ResponseEntity<>(fetchedClient, HttpStatus.OK);
     }
 
+    @Transactional
     @PostMapping("/register")
-    public ResponseEntity<Client> registerClient(@RequestBody Client client) {
-        System.out.println("Hi" + client);
-        return new ResponseEntity<>(clientService.addClient(client), HttpStatus.CREATED);
+    public ResponseEntity<Client> registerClient(@RequestBody @Valid RegisterRequestDTO registerRequest) {
+        Client fetchedClient = Client.fromRegisterRequestDTO(registerRequest);
+        return new ResponseEntity<>(clientService.addClient(fetchedClient), HttpStatus.CREATED);
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody Client client) {
+    public ResponseEntity<String> login(@RequestBody @Valid LoginRequestDTO loginRequest) {
 
         authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(client.getEmail(), client.getPassword()));
+                new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
 
-        String jwtToken = jwtService.generateToken(client.getEmail());
+        String jwtToken = jwtService.generateToken(loginRequest.getEmail());
         return ResponseEntity.ok(jwtToken);
     }
 }
