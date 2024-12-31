@@ -17,7 +17,7 @@ import com.zerobeta.ordermanagementAPI.DTO.LoginRequestDTO;
 import com.zerobeta.ordermanagementAPI.DTO.RegisterRequestDTO;
 import com.zerobeta.ordermanagementAPI.Model.Client;
 import com.zerobeta.ordermanagementAPI.Service.ClientService;
-import com.zerobeta.ordermanagementAPI.Service.JWTService;
+import com.zerobeta.ordermanagementAPI.Service.Utils.JWTService;
 import org.springframework.transaction.annotation.Transactional;
 import jakarta.validation.Valid;
 

@@ -1,4 +1,4 @@
-package com.zerobeta.ordermanagementAPI.Service;
+package com.zerobeta.ordermanagementAPI.Service.Utils;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;

@@ -5,8 +5,11 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import com.zerobeta.ordermanagementAPI.Repository.OrderRepo;
+import com.zerobeta.ordermanagementAPI.Service.Utils.SecurityService;
 import com.zerobeta.ordermanagementAPI.Common.Enums.OrderStatus;
 import com.zerobeta.ordermanagementAPI.DTO.OrderRequestDTO;
 import com.zerobeta.ordermanagementAPI.DTO.OrderResponseDTO;
@@ -41,7 +44,6 @@ public class OrderService {
      * DISPATCHED.
      */
     public void updateNewOrdersToDispatched() {
-
         List<Order> orderList = orderRepo.findByStatus(OrderStatus.NEW);
         for (Order order : orderList) {
             order.setStatus(OrderStatus.DISPATCHED);
@@ -61,7 +63,7 @@ public class OrderService {
         Optional<Order> order = orderRepo.findByOrderId(id);
         /*
          * Only orders in NEW status can be cancelled.
-         */
+        */
 
         if (order.isPresent()) { // Check if the order exists
             if (order.get().getStatus() == OrderStatus.NEW) { // Check if the order is in NEW status
@@ -74,5 +76,22 @@ public class OrderService {
         } else {
             throw new IllegalArgumentException("Order with id " + id + " not found");
         }
+    }
+
+    public List<OrderResponseDTO> getOrderHistory(int page, int size) {
+        Client client = securityService.getAuthenticatedClient();
+
+        // Create a PageRequest object to retrieve a page of orders
+        PageRequest pageRequest = PageRequest.of(page, size);
+        // Retrieve a page of orders for the client
+        Page<Order> orderPage = orderRepo.findByClientId(client.getId(), pageRequest);
+
+        // If the page is empty, throw an exception
+        if (orderPage.isEmpty()) {
+            throw new IllegalArgumentException("No orders found for client " + client.getId());
+        }
+
+        return orderPage.stream().map(order -> OrderResponseDTO.fromOrder(order))
+                .collect(Collectors.toList());
     }
 }

@@ -2,6 +2,8 @@ package com.zerobeta.ordermanagementAPI.Controller;
 
 import java.util.List;
 import java.util.UUID;
+
+import org.hibernate.query.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +18,7 @@ import com.zerobeta.ordermanagementAPI.DTO.OrderResponseDTO;
 import com.zerobeta.ordermanagementAPI.Service.OrderService;
 import org.springframework.transaction.annotation.Transactional;
 import jakarta.validation.Valid;
+import org.springframework.web.bind.annotation.RequestParam;
 
 /*
  * OrderController is a REST controller that handles HTTP requests related to order management.
@@ -71,6 +74,22 @@ public class OrderController {
          * @param id: The unique ID of the order.
          */
         return new ResponseEntity<>(orderService.cancelOrder(id), HttpStatus.OK);
+    }
+
+    @GetMapping("/history")
+    public ResponseEntity<List<OrderResponseDTO>> getOrderHistory(
+            @RequestParam(name = "page", defaultValue = "1") int page,
+            @RequestParam(name = "size", defaultValue = "5") int size) {
+        /*
+         * Endpoint: GET /api/orders/history
+         * Function: Retrieve the order history of the authenticated client.
+         * 
+         * @param page: The page number.
+         * 
+         * @param size: The number of orders per page.
+         */
+        List<OrderResponseDTO> orderHistory = orderService.getOrderHistory(page, size);
+        return new ResponseEntity<>(orderHistory, HttpStatus.OK);
     }
 
 }
