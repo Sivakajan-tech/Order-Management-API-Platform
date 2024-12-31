@@ -63,7 +63,6 @@ public class JWTService {
 
     private <T> T extractClaim(String token, Function<Claims, T> claimResolver) {
         final Claims claims = extractAllClaims(token);
-        System.out.println("new");
         return claimResolver.apply(claims);
     }
 
