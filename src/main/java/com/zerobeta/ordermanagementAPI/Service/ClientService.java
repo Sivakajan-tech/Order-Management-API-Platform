@@ -28,7 +28,7 @@ public class ClientService implements UserDetailsService {
         this.logger = Logger.getLogger(ClientService.class.getName());
     }
 
-    public Client getClient(Long id) {
+    public Client getClient(UUID id) {
         return clientRepo.findById(id).orElse(null);
     }
 

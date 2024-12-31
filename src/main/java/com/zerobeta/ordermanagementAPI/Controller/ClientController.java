@@ -1,6 +1,7 @@
 package com.zerobeta.ordermanagementAPI.Controller;
 
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -38,7 +39,7 @@ public class ClientController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Client> findById(@PathVariable Long id) {
+    public ResponseEntity<Client> findById(@PathVariable UUID id) {
         Client fetchedClient = clientService.getClient(id);
 
         if (fetchedClient == null) {

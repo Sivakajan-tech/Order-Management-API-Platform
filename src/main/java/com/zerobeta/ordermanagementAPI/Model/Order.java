@@ -1,6 +1,7 @@
 package com.zerobeta.ordermanagementAPI.Model;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 import com.zerobeta.ordermanagementAPI.Common.Enums.OrderStatus;
 
@@ -26,9 +27,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class Order {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "order_id")
-    private Long orderId;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(name = "order_id", columnDefinition = "BINARY(16)")
+    private UUID orderId;
 
     @Column(name = "order_name", nullable = false)
     private String orderName;
@@ -38,6 +39,9 @@ public class Order {
 
     @Column(name = "shipping_address", nullable = false)
     private String shipping_address;
+
+    @Column(name = "quantity", nullable = false)
+    private int quantity;
 
     @ManyToOne
     @JoinColumn(name = "client_id", nullable = false)

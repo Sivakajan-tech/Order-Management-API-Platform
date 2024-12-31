@@ -2,6 +2,7 @@ package com.zerobeta.ordermanagementAPI.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,12 +25,8 @@ public class OrderService {
         return orderRepo.findAll();
     }
 
-    public Order getOrder(Long id) {
+    public Order getOrder(UUID id) {
         return orderRepo.findById(id).orElse(null);
-    }
-
-    public Order addOrder(Order order) {
-        return orderRepo.save(order);
     }
 
     public void updateNewOrdersToDispatched() {
@@ -43,13 +40,17 @@ public class OrderService {
     public Order orderOrder(OrderRequestDTO orderRequest) {
         Client client = securityService.getAuthenticatedClient();
 
-        Order newOrder = new Order(
-                null, orderRequest.getName(), null, orderRequest.getShippingAddress(), client, OrderStatus.NEW);
+        Order newOrder = new Order();
+        newOrder.setClient(client);
+        newOrder.setOrderName(orderRequest.getName());
+        newOrder.setStatus(OrderStatus.NEW);
+        newOrder.setQuantity(orderRequest.getQuantity());
+        newOrder.setShipping_address(orderRequest.getShippingAddress());
 
         return orderRepo.save(newOrder);
     }
 
-    public Order cancelOrder(Long id) {
+    public Order cancelOrder(UUID id) {
         Optional<Order> order = orderRepo.findByOrderId(id);
 
         if (order.isPresent()) {

@@ -1,5 +1,6 @@
 package com.zerobeta.ordermanagementAPI.Model;
 
+import java.util.UUID;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import jakarta.persistence.Column;
@@ -11,6 +12,7 @@ import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
 @Component
 @Entity
 @Table(name = "`clients`")
@@ -21,9 +23,9 @@ import lombok.NoArgsConstructor;
 @Scope("prototype")
 public class Client {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "client_id")
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(name = "client_id", columnDefinition = "BINARY(16)")
+    private UUID id;
 
     @Column(name = "first_name", nullable = false)
     private String first_name;
