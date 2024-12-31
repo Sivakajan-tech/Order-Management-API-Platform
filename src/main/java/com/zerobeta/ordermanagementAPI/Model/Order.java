@@ -19,6 +19,10 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/*
+ * Represents an order in the order management system. This entity 
+ * is mapped to the `orders` table in the database.
+ */
 @Entity
 @Table(name = "`orders`")
 @Data

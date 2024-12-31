@@ -35,7 +35,13 @@ public class OrderService {
         return OrderResponseDTO.fromOrder(order.get());
     }
 
+    /**
+     * This method retrieves a list of orders with the status NEW from the order
+     * repository, iterates through the list, updates the status of each order to
+     * DISPATCHED.
+     */
     public void updateNewOrdersToDispatched() {
+
         List<Order> orderList = orderRepo.findByStatus(OrderStatus.NEW);
         for (Order order : orderList) {
             order.setStatus(OrderStatus.DISPATCHED);
@@ -53,9 +59,12 @@ public class OrderService {
 
     public OrderResponseDTO cancelOrder(UUID id) {
         Optional<Order> order = orderRepo.findByOrderId(id);
+        /*
+         * Only orders in NEW status can be cancelled.
+         */
 
-        if (order.isPresent()) {
-            if (order.get().getStatus() == OrderStatus.NEW) {
+        if (order.isPresent()) { // Check if the order exists
+            if (order.get().getStatus() == OrderStatus.NEW) { // Check if the order is in NEW status
                 Order newOrder = order.get();
                 newOrder.setStatus(OrderStatus.CANCELLED);
                 return OrderResponseDTO.fromOrder(orderRepo.save(newOrder));

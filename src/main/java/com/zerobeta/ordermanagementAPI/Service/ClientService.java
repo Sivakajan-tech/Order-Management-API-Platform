@@ -28,6 +28,12 @@ public class ClientService implements UserDetailsService {
         return clientRepo.findAll();
     }
 
+    /**
+     * Loads the user details by the given email.
+     * This method is used to retrieve user information from the database
+     * based on the provided email address. It is a part of the UserDetailsService
+     * interface which is used by Spring Security to perform authentication and authorization.
+     */
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         Client client = clientRepo.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found with email: " + email));

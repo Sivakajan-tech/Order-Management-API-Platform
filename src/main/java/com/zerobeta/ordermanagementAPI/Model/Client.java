@@ -15,6 +15,11 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/*
+ * The Client class represents a client entity in the order management system.
+ * It is annotated with JPA and Spring annotations to map it to the database
+ * and manage its lifecycle within the Spring context.
+ */
 @Component
 @Entity
 @Table(name = "`clients`")

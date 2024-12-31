@@ -18,6 +18,8 @@ public class ApplicationConfig {
     @Autowired
     private BCryptPasswordEncoder encoder;
 
+    // configures the authentication provider to use a custom UserDetailsService and
+    // BCryptPasswordEncoder for checking username and password from the database.
     @Bean
     public AuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();

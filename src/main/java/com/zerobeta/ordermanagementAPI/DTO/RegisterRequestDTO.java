@@ -1,7 +1,5 @@
 package com.zerobeta.ordermanagementAPI.DTO;
 
-import com.zerobeta.ordermanagementAPI.Model.Client;
-
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;

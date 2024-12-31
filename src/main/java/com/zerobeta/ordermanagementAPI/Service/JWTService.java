@@ -20,13 +20,14 @@ import org.springframework.stereotype.Service;
 @Service
 public class JWTService {
     private String secretKey;
-    private long validityInMilliseconds;
+    private long validityInMilliseconds; // Define the validity of the token
 
     public JWTService() {
         this.secretKey = generateSecretKey();
-        this.validityInMilliseconds = 1000 * 60 * 30;
+        this.validityInMilliseconds = 1000 * 60 * 30; // 30 minutes
     }
 
+    // Generate a secret key for the JWT token
     public String generateSecretKey() {
         try {
             KeyGenerator keyGen = KeyGenerator.getInstance("HmacSHA256");
@@ -37,7 +38,12 @@ public class JWTService {
             throw new RuntimeException("Error generating secret key", e);
         }
     }
-
+    
+    /**
+     * This method creates a JWT with the specified username as the subject.
+     * The token includes claims, the issued date, and an expiration date.
+     * The token is signed using the HS256 algorithm and a secret key.
+     */
     public String generateToken(String username) {
 
         Map<String, Object> claims = new HashMap<>();
