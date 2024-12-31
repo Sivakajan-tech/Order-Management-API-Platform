@@ -3,14 +3,14 @@ package com.zerobeta.ordermanagementAPI.Repository;
 import java.util.List;
 import java.util.Optional;
 
-import com.zerobeta.ordermanagementAPI.Model.Product;
+import com.zerobeta.ordermanagementAPI.Model.Order;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import com.zerobeta.ordermanagementAPI.Common.Enums.OrderStatus;
 
 @Repository
-public interface ProductRepo extends JpaRepository<Product, Long> {
-    Optional<Product> findById(Long id);
+public interface OrderRepo extends JpaRepository<Order, Long> {
+    Optional<Order> findByOrderId(Long id);
 
-    List<Product> findByStatus(OrderStatus status);
+    List<Order> findByStatus(OrderStatus status);
 }
