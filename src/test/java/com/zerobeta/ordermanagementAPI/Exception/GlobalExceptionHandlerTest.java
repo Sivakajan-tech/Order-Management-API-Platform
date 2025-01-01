@@ -149,7 +149,6 @@ public class GlobalExceptionHandlerTest {
         ResponseEntity<Map<String, String>> response = handler.handleSQLIntegrityConstraintViolation(ex);
 
         // Verify the response
-        assertNotNull(response);
         assertEquals(HttpStatus.CONFLICT, response.getStatusCode());
         Map<String, String> errorDetails = response.getBody();
         assertNotNull(errorDetails);
