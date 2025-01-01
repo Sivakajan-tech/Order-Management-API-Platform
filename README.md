@@ -61,7 +61,7 @@ The Order Management API Platform is a backend service built using Java Spring B
    
    Edit the application.properties file to configure your MySQL credentials:
    ```bash
-   spring.datasource.url=jdbc:mysql://<hostname>:<port>/oms
+   spring.datasource.url=jdbc:mysql://<hostname>:<port>/oma
    spring.datasource.username=your-<username> 
    spring.datasource.password=your-<password>
    ```
