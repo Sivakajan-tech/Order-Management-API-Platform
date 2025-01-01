@@ -55,17 +55,9 @@ The Order Management API Platform is a backend service built using Java Spring B
 
 2. **Set Up MySQL**:
    ```bash
-   CREATE DATABASE oma;
+   CREATE DATABASE <database-name>;
    ```
 
-3. **Configure the Application:**:
-   
-   Edit the application.properties file to configure your MySQL credentials:
-   ```bash
-   spring.datasource.url=jdbc:mysql://<hostname>:<port>/oma
-   spring.datasource.username=<your-username> 
-   spring.datasource.password=<your-password>
-   ```
 4. **Run the Application**:
    - To run the application using Maven:
      ```bash
@@ -75,6 +67,12 @@ The Order Management API Platform is a backend service built using Java Spring B
      ```bash
      mvn clean package && docker-compose up
      ```
+   Make sure to set the following environment variables:
+
+   - `SPRING_DATASOURCE_URL` – The JDBC URL for your MySQL database.{default `value: jdbc:mysql://localhost:3306/oma}
+   - `SPRING_DATASOURCE_USERNAME` – The username for the MySQL connection.{default value: root}
+   - `SPRING_DATASOURCE_PASSWORD` – The password for the MySQL connection.{default value: password}
+  
 5. **Access the API**:
    - API will be available at `http://localhost:8080`.
 
