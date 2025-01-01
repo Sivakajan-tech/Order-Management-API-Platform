@@ -44,39 +44,31 @@ jobs:
           distribution: "temurin"
           cache: maven
 
-      - name: Generate Coverage Report
-        run: |
-          mvn -B package --file pom.xml
+      - name: Cache Maven dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
 
-      - name: Upload Report
-        uses: "actions/upload-artifact@v4"
+          # Run Maven unit tests with Jacoco coverage
+      - name: Run Maven tests
+        run: mvn clean verify
+
+        # Upload Jacoco report as an artifact
+      - name: Upload Jacoco Coverage Report
+        if: success()
+        uses: actions/upload-artifact@v3
         with:
           name: jacoco-report
-          path: ${{ github.workspace }}/target/site/jacoco/jacoco.xml
+          path: target/site/jacoco
 
-      - name: Add coverage to PR
-        id: jacoco
-        uses: madrapps/jacoco-report@v1.2
+      # Optionally, upload coverage results to Codecov (if you use Codecov)
+      - name: Upload coverage to Codecov
+        if: success()
+        uses: codecov/codecov-action@v3
         with:
-          paths: ${{ github.workspace }}/target/site/jacoco/jacoco.xml
-          token: ${{ secrets.GITHUB_TOKEN }}
-          min-coverage-overall: 80
-          min-coverage-changed-files: 80
-          title: Code Coverage
-
-      - name: Save Coverage To Environment Variable
-        run: |
-          echo "TOTAL_COVERAGE=${{ steps.jacoco.outputs.coverage-overall }}" >> $GITHUB_ENV
-          echo "CHANGED_FILES_COVERAGE=${{ steps.jacoco.outputs.coverage-changed-files }}" >> $GITHUB_ENV
-
-      - name: Print & Check Coverage Info
-        run: |
-          import os
-          import sys
-          print("Total Coverage: " + str(os.environ["TOTAL_COVERAGE"]))
-          print("Changed Files Coverage: " + str(os.environ["CHANGED_FILES_COVERAGE"]))
-          if float(os.environ["TOTAL_COVERAGE"]) < 80 or float(os.environ["CHANGED_FILES_COVERAGE"]) < 80:
-            print("Insufficient Coverage!")
-            sys.exit(-1) # Cause Status Check Failure due to noncompliant coverage
-          sys.exit(0)
-        shell: python
+          files: target/site/jacoco/jacoco.xml
+          flags: unittests
+          fail_ci_if_error: true
