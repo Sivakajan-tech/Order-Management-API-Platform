@@ -67,8 +67,9 @@ jobs:
       # Optionally, upload coverage results to Codecov (if you use Codecov)
       - name: Upload coverage to Codecov
         if: success()
-        uses: codecov/codecov-action@v3
+        uses: codecov/codecov-action@v5
         with:
+          token: ${{ secrets.CODECOV_TOKEN }}
           files: target/site/jacoco/jacoco.xml
           flags: unittests
           fail_ci_if_error: true
