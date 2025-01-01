@@ -1,5 +1,5 @@
 services:
-  api:
+  ordermanagement-api:
     build:
       context: .
       dockerfile: Dockerfile
@@ -8,7 +8,7 @@ services:
     networks:
       - springapimysql-net
     environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://localhost:3306/oma?autoReconnect=true&allowPublicKeyRetrieval=true&useSSL=false
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysqldb:3306/oma
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: password
     depends_on:
