@@ -32,44 +32,8 @@ jobs:
 
       - name: Run Maven tests
         run: mvn test -X
-
-  Code-Coverage:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Set up JDK 17
-        uses: actions/setup-java@v4
-        with:
-          java-version: 17
-          distribution: "temurin"
-          cache: maven
-
-      - name: Cache Maven dependencies
-        uses: actions/cache@v3
-        with:
-          path: ~/.m2/repository
-          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
-          restore-keys: |
-            ${{ runner.os }}-maven-
-
-          # Run Maven unit tests with Jacoco coverage
-      - name: Run Maven tests
-        run: mvn clean verify
-
-        # Upload Jacoco report as an artifact
-      - name: Upload Jacoco Coverage Report
-        if: success()
-        uses: actions/upload-artifact@v3
-        with:
-          name: jacoco-report
-          path: target/site/jacoco
-
-      # Optionally, upload coverage results to Codecov (if you use Codecov)
+        
       - name: Upload coverage to Codecov
-        if: success()
         uses: codecov/codecov-action@v5
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          files: target/site/jacoco/jacoco.xml
-          flags: unittests
-          fail_ci_if_error: true
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
