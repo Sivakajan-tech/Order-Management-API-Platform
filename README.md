@@ -54,7 +54,7 @@ The Order Management API Platform is a backend service built using Java Spring B
 
 2. **Set Up MySQL**:
    ```bash
-   CREATE DATABASE orm;
+   CREATE DATABASE oma;
    ```
 
 3. **Configure the Application:**:
