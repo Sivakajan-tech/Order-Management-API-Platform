@@ -1,6 +1,8 @@
 package com.zerobeta.ordermanagementAPI.Repository;
 
 import com.zerobeta.ordermanagementAPI.Common.Enums.OrderStatus;
+import com.zerobeta.ordermanagementAPI.Fixture.ClientFixture;
+import com.zerobeta.ordermanagementAPI.Fixture.OrderFixture;
 import com.zerobeta.ordermanagementAPI.Model.Client;
 import com.zerobeta.ordermanagementAPI.Model.Order;
 import org.junit.jupiter.api.BeforeEach;
@@ -18,34 +20,38 @@ import static org.assertj.core.api.Assertions.assertThat;
 @DataJpaTest
 class OrderRepoTest {
     UUID clientId = UUID.randomUUID();
-    Client client = new Client(null, "first_name", "last_name", "email", "password");
+
     @Autowired
     private OrderRepo orderRepo;
 
     @Autowired
     ClientRepo clientRepo;
 
-    private Order testOrder;
+    private Client client;
+    private Order testOrder1;
+    private Order testOrder2;
 
     @BeforeEach
     void setUp() {
-        Client savedClient = clientRepo.save(client);
+        client = ClientFixture.createClient("1");
+        clientRepo.save(client);
 
         // Create and save a test order
-        testOrder = new Order();
-        testOrder.setOrderName("test_order");
-        testOrder.setClient(client);
-        testOrder.setShipping_address("test_address");
-        testOrder.setQuantity(2);
-        testOrder = orderRepo.save(testOrder);
+        testOrder1= OrderFixture.createOrderByClient("1", client);
+        testOrder1 = orderRepo.save(testOrder1);
+
+        // Create and save a test order
+        testOrder2 = OrderFixture.createOrderByClient("1", client);
+        testOrder2.setStatus(OrderStatus.DISPATCHED);
+        testOrder2 = orderRepo.save(testOrder2);
     }
 
     @Test
     void testFindByOrderId() {
-        Optional<Order> foundOrder = orderRepo.findByOrderId(testOrder.getOrderId());
+        Optional<Order> foundOrder = orderRepo.findByOrderId(testOrder1.getOrderId());
 
         assertThat(foundOrder).isPresent();
-        assertThat(foundOrder.get().getOrderName()).isEqualTo(testOrder.getOrderName());
+        assertThat(foundOrder.get().getOrderName()).isEqualTo(testOrder1.getOrderName());
     }
 
     @Test
@@ -53,16 +59,35 @@ class OrderRepoTest {
         List<Order> orders = orderRepo.findByStatus(OrderStatus.NEW);
 
         assertThat(orders).isNotEmpty();
+        assertThat(orders).hasSize(1);
         assertThat(orders.get(0).getStatus()).isEqualTo(OrderStatus.NEW);
     }
 
     @Test
-    void testFindByClientId() {
+    void testFindByStatusZeroOrders() {
+        List<Order> orders = orderRepo.findByStatus(OrderStatus.CANCELLED);
+
+        assertThat(orders).isEmpty();
+    }
+
+    @Test
+    void testFindByClientIdWith0thPage() {
         PageRequest pageRequest = PageRequest.of(0, 10);
-        Page<Order> ordersPage = orderRepo.findByClientId(testOrder.getClient().getId(), pageRequest);
+        Page<Order> ordersPage = orderRepo.findByClientId(testOrder1.getClient().getId(), pageRequest);
 
         assertThat(ordersPage).isNotEmpty();
-        assertThat(ordersPage.getContent().get(0).getClient().getId()).isEqualTo(testOrder.getClient().getId());
+        assertThat(ordersPage.getContent()).hasSize(2);
+        assertThat(ordersPage.getContent().get(0).getClient().getId()).isEqualTo(testOrder1.getClient().getId());
+    }
+
+    @Test
+    void testFindByClientIdWithNon0thPage() {
+        PageRequest pageRequest = PageRequest.of(1, 1);
+        Page<Order> ordersPage = orderRepo.findByClientId(testOrder1.getClient().getId(), pageRequest);
+
+        assertThat(ordersPage).isNotEmpty();
+        assertThat(ordersPage.getContent()).hasSize(1);
+        assertThat(ordersPage.getContent().get(0).getClient().getId()).isEqualTo(testOrder1.getClient().getId());
     }
 
     @Test

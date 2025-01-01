@@ -1,6 +1,7 @@
 package com.zerobeta.ordermanagementAPI.Service;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -32,7 +33,7 @@ public class OrderService {
     public OrderResponseDTO getOrder(UUID id) {
         Optional<Order> order = orderRepo.findByOrderId(id);
         if (order == null) {
-            throw new IllegalArgumentException("Order with id " + id + " not found");
+            throw new NoSuchElementException("Order with id " + id + " not found");
         }
 
         return OrderResponseDTO.fromOrder(order.get());
@@ -63,7 +64,7 @@ public class OrderService {
         Optional<Order> order = orderRepo.findByOrderId(id);
         /*
          * Only orders in NEW status can be cancelled.
-        */
+         */
 
         if (order.isPresent()) { // Check if the order exists
             if (order.get().getStatus() == OrderStatus.NEW) { // Check if the order is in NEW status
