@@ -22,18 +22,13 @@ jobs:
           distribution: "temurin"
           java-version: "17"
 
-      - name: Cache Maven dependencies
-        uses: actions/cache@v3
-        with:
-          path: ~/.m2/repository
-          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
-          restore-keys: |
-            ${{ runner.os }}-m2-
+      - name: Install dependencies
+        run: mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
 
-      - name: Run Maven tests
-        run: mvn test -X
-        
+      - name: Run tests and collect coverage
+        run: mvn -B test
+
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v5
         env:
-          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+          CODECOV_TOKEN: ${{ secrets.CODECOV_ORG_TOKEN }}
