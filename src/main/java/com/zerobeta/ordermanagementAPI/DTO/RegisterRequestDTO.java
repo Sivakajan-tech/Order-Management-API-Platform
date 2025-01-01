@@ -2,9 +2,11 @@ package com.zerobeta.ordermanagementAPI.DTO;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data
+@AllArgsConstructor
 public class RegisterRequestDTO {
     @NotBlank(message = "First name cannot be empty")
     private String first_name;

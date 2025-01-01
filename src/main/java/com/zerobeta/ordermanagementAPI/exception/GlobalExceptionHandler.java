@@ -1,4 +1,4 @@
-package com.zerobeta.ordermanagementAPI.exception;
+package com.zerobeta.ordermanagementAPI.Exception;
 
 import io.jsonwebtoken.security.SignatureException;
 import io.jsonwebtoken.JwtException;
