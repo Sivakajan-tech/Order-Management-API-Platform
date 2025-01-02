@@ -87,6 +87,12 @@ public class OrderService {
         // Retrieve a page of orders for the client
         Page<Order> orderPage = orderRepo.findByClientId(client.getId(), pageRequest);
 
+        // If the requested page number is greater than the total number of pages, adjust it
+        if (page >= orderPage.getTotalPages()) {
+            pageRequest = PageRequest.of(orderPage.getTotalPages() - 1, size);
+            orderPage = orderRepo.findByClientId(client.getId(), pageRequest);
+        }
+
         // If the page is empty, throw an exception
         if (orderPage.isEmpty()) {
             throw new IllegalArgumentException("No orders found for client " + client.getId());

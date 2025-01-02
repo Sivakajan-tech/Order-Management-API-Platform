@@ -78,7 +78,7 @@ public class OrderController {
 
     @GetMapping("/history")
     public ResponseEntity<List<OrderResponseDTO>> getOrderHistory(
-            @RequestParam(name = "page", defaultValue = "1") int page,
+            @RequestParam(name = "page", defaultValue = "0") int page,
             @RequestParam(name = "size", defaultValue = "5") int size) {
         /*
          * Endpoint: GET /api/orders/history
