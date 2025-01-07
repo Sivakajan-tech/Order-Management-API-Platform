@@ -86,6 +86,12 @@ public class ClientController {
          * 
          * @param loginRequest: The login details of the client.
          */
+
+        /*
+         * The user credential normally pass through the `authenticationManager` and
+         * then to the `authenticationProvider`. In our case, we are using the
+         * `DaoAuthenticationProvider`.
+         */
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
 

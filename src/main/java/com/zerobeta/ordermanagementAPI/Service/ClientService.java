@@ -28,7 +28,7 @@ public class ClientService implements UserDetailsService {
         return clientRepo.findAll();
     }
 
-    /**
+    /*
      * Loads the user details by the given email.
      * This method is used to retrieve user information from the database
      * based on the provided email address. It is a part of the UserDetailsService
