@@ -15,16 +15,13 @@ public class ApplicationConfig {
     @Autowired
     private UserDetailsService userDetailsService;
 
-    @Autowired
-    private BCryptPasswordEncoder encoder;
-
     // configures the authentication provider to use a custom UserDetailsService and
     // BCryptPasswordEncoder for checking username and password from the database.
     @Bean
     public AuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
         provider.setUserDetailsService(userDetailsService);
-        provider.setPasswordEncoder(encoder);
+        provider.setPasswordEncoder(encoder());
 
         return provider;
     }
@@ -32,5 +29,10 @@ public class ApplicationConfig {
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
         return config.getAuthenticationManager();
+    }
+
+    @Bean
+    public BCryptPasswordEncoder encoder() {
+        return new BCryptPasswordEncoder(12);
     }
 }
