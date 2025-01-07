@@ -31,6 +31,7 @@ The Order Management API Platform is a backend service built using Java Spring B
 - [Database Design](Docs/DatabaseDesign.md)
 - [API Documentation](Docs/APIDocumentation.md)
 - [Docker Guide](Docs/Docker-Guide.md)
+- [JWT Authentication](Docs/JWT.md)
 
 --- 
 
