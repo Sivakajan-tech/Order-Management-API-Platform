@@ -1,8 +1,6 @@
 package com.zerobeta.ordermanagementAPI.Fixture;
 
 import org.junit.jupiter.api.Test;
-
-import com.zerobeta.ordermanagementAPI.DTO.RegisterRequestDTO;
 import com.zerobeta.ordermanagementAPI.Model.Client;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -24,16 +22,5 @@ public class ClientFixture {
 
         String expectedString = "Client [id=null, first_name=test_first_name, last_name=test__last_name, email=test__email]";
         assertThat(client.toString()).isEqualTo(expectedString);
-    }
-
-    @Test
-    void testFromRegisterRequestDTO() {
-        RegisterRequestDTO dto = DTOFixture.createRegisterRequestDTO();
-
-        Client client = Client.fromRegisterRequestDTO(dto);
-
-        assertThat(client.getFirst_name()).isEqualTo(dto.getFirst_name());
-        assertThat(client.getLast_name()).isEqualTo(dto.getLast_name());
-        assertThat(client.getEmail()).isEqualTo(dto.getEmail());
     }
 }

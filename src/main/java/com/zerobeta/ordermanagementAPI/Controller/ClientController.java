@@ -74,8 +74,7 @@ public class ClientController {
          * 
          * @param registerRequest: The registration details of the client.
          */
-        Client fetchedClient = Client.fromRegisterRequestDTO(registerRequest);
-        return new ResponseEntity<>(clientService.addClient(fetchedClient), HttpStatus.CREATED);
+        return new ResponseEntity<>(clientService.addClient(registerRequest), HttpStatus.CREATED);
     }
 
     @PostMapping("/login")

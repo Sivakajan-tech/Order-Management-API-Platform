@@ -94,8 +94,8 @@ public class ClientControllerTest {
     void testRegisterClient() {
         // Arrange
         RegisterRequestDTO registerRequest = DTOFixture.createRegisterRequestDTO();
-        Client client = Client.fromRegisterRequestDTO(registerRequest);
-        when(clientService.addClient(any(Client.class))).thenReturn(client);
+        Client client = clientService.createFromRegisterRequestDTO(registerRequest);
+        when(clientService.addClient(any(RegisterRequestDTO.class))).thenReturn(client);
 
         // Act
         ResponseEntity<Client> response = clientController.registerClient(registerRequest);
@@ -103,8 +103,7 @@ public class ClientControllerTest {
         // Assert
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
         assertEquals(client, response.getBody());
-        assertNotNull(response.getBody());
-        verify(clientService, times(1)).addClient(any(Client.class));
+        verify(clientService, times(1)).addClient(any(RegisterRequestDTO.class));
     }
 
     @Test

@@ -2,6 +2,7 @@ package com.zerobeta.ordermanagementAPI.Service;
 
 import static org.mockito.Mockito.*;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -15,7 +16,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
+import com.zerobeta.ordermanagementAPI.DTO.RegisterRequestDTO;
 import com.zerobeta.ordermanagementAPI.Fixture.ClientFixture;
+import com.zerobeta.ordermanagementAPI.Fixture.DTOFixture;
 import com.zerobeta.ordermanagementAPI.Model.Client;
 import com.zerobeta.ordermanagementAPI.Model.ClientPrincipal;
 import com.zerobeta.ordermanagementAPI.Repository.ClientRepo;
@@ -56,20 +59,6 @@ public class ClientServiceTest {
     }
 
     @Test
-    void testAddClient() {
-        Client client = new Client();
-        client.setEmail("test@example.com");
-
-        when(clientRepo.save(client)).thenReturn(client);
-
-        Client result = clientService.addClient(client);
-
-        assertNotNull(result);
-        assertEquals("test@example.com", result.getEmail());
-        verify(clientRepo, times(1)).save(client);
-    }
-
-    @Test
     void testGetAllClients() {
         List<Client> clients = Arrays.asList(new Client(), new Client());
 
@@ -105,5 +94,16 @@ public class ClientServiceTest {
 
         assertThrows(UsernameNotFoundException.class, () -> clientService.loadUserByUsername(email));
         verify(clientRepo, times(1)).findByEmail(email);
+    }
+
+    @Test
+    void testcreateFromRegisterRequestDTO() {
+        RegisterRequestDTO dto = DTOFixture.createRegisterRequestDTO();
+
+        Client client = clientService.createFromRegisterRequestDTO(dto);
+
+        assertThat(client.getFirst_name()).isEqualTo(dto.getFirst_name());
+        assertThat(client.getLast_name()).isEqualTo(dto.getLast_name());
+        assertThat(client.getEmail()).isEqualTo(dto.getEmail());
     }
 }

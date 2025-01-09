@@ -4,6 +4,7 @@ import com.zerobeta.ordermanagementAPI.Common.Enums.OrderStatus;
 import com.zerobeta.ordermanagementAPI.DTO.OrderRequestDTO;
 import com.zerobeta.ordermanagementAPI.DTO.OrderResponseDTO;
 import com.zerobeta.ordermanagementAPI.Fixture.ClientFixture;
+import com.zerobeta.ordermanagementAPI.Fixture.DTOFixture;
 import com.zerobeta.ordermanagementAPI.Fixture.OrderFixture;
 import com.zerobeta.ordermanagementAPI.Model.Client;
 import com.zerobeta.ordermanagementAPI.Model.Order;
@@ -24,6 +25,7 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.UUID;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
@@ -197,5 +199,21 @@ public class OrderServiceTest {
 
         assertThrows(IllegalArgumentException.class, () -> orderService.getOrderHistory(0, 2));
         verify(orderRepo, times(1)).findByClientId(eq(client.getId()), any(PageRequest.class));
+    }
+
+    @Test
+    void testCreateFromOrderRequestDTO() {
+        OrderRequestDTO orderRequestDTO = DTOFixture.createOrderRequestDTO();
+
+        Client client = ClientFixture.createClient("1");
+
+        Order order = orderService.CreateFromOrderRequestDTO(orderRequestDTO, client);
+
+        assertThat(order).isNotNull();
+        assertThat(order.getOrderName()).isEqualTo(orderRequestDTO.getName());
+        assertThat(order.getQuantity()).isEqualTo(orderRequestDTO.getQuantity());
+        assertThat(order.getShipping_address()).isEqualTo(orderRequestDTO.getShipping_address());
+        assertThat(order.getStatus()).isEqualTo(OrderStatus.NEW);
+        assertThat(order.getClient()).isEqualTo(client);
     }
 }

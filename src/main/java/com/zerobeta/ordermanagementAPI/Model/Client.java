@@ -3,8 +3,6 @@ package com.zerobeta.ordermanagementAPI.Model;
 import java.util.UUID;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
-import com.zerobeta.ordermanagementAPI.DTO.RegisterRequestDTO;
-import com.zerobeta.ordermanagementAPI.Utils.Encoders;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -51,16 +49,4 @@ public class Client {
         return "Client [id=" + id + ", first_name=" + first_name + ", last_name=" + last_name + ", email=" + email
                 + "]";
     }
-
-    // Factory method for creating an instance from RegisterRequestDTO
-    public static Client fromRegisterRequestDTO(RegisterRequestDTO dto) {
-        Client client = new Client();
-        client.setFirst_name(dto.getFirst_name());
-        client.setLast_name(dto.getLast_name());
-        client.setEmail(dto.getEmail());
-        client.setPassword(Encoders.passwordEncoder(dto.getPassword()));
-
-        return client;
-    }
-
 }

@@ -1,8 +1,11 @@
 package com.zerobeta.ordermanagementAPI.Service;
 
+import com.zerobeta.ordermanagementAPI.DTO.RegisterRequestDTO;
 import com.zerobeta.ordermanagementAPI.Model.Client;
 import com.zerobeta.ordermanagementAPI.Model.ClientPrincipal;
 import com.zerobeta.ordermanagementAPI.Repository.ClientRepo;
+import com.zerobeta.ordermanagementAPI.Utils.Encoders;
+
 import java.util.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -19,8 +22,9 @@ public class ClientService implements UserDetailsService {
         return clientRepo.findById(id).orElse(null);
     }
 
-    public Client addClient(Client client) {
-        Client addeduser = clientRepo.save(client);
+    public Client addClient(RegisterRequestDTO requestDTO) {
+        Client newClient = createFromRegisterRequestDTO(requestDTO);
+        Client addeduser = clientRepo.save(newClient);
         return addeduser;
     }
 
@@ -39,5 +43,16 @@ public class ClientService implements UserDetailsService {
         Client client = clientRepo.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found with email: " + email));
         return new ClientPrincipal(client);
+    }
+
+    // Factory method for creating an instance from RegisterRequestDTO
+    public Client createFromRegisterRequestDTO(RegisterRequestDTO dto) {
+        Client client = new Client();
+        client.setFirst_name(dto.getFirst_name());
+        client.setLast_name(dto.getLast_name());
+        client.setEmail(dto.getEmail());
+        client.setPassword(Encoders.passwordEncoder(dto.getPassword()));
+
+        return client;
     }
 }

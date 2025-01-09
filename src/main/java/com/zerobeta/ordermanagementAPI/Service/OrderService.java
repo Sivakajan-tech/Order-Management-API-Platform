@@ -55,7 +55,7 @@ public class OrderService {
     public OrderResponseDTO createOrder(OrderRequestDTO orderRequest) {
         Client client = securityService.getAuthenticatedClient();
 
-        Order newOrder = Order.fromOrderRequestDTO(orderRequest, client);
+        Order newOrder = CreateFromOrderRequestDTO(orderRequest, client);
 
         return OrderResponseDTO.fromOrder(orderRepo.save(newOrder));
     }
@@ -101,5 +101,16 @@ public class OrderService {
 
         return orderPage.stream().map(order -> OrderResponseDTO.fromOrder(order))
                 .collect(Collectors.toList());
+    }
+
+    // Factory method for creating an instance from OrderRequestDTO
+    public Order CreateFromOrderRequestDTO(OrderRequestDTO orderRequest, Client client) {
+        Order newOrder = new Order();
+        newOrder.setClient(client);
+        newOrder.setOrderName(orderRequest.getName());
+        newOrder.setStatus(OrderStatus.NEW);
+        newOrder.setQuantity(orderRequest.getQuantity());
+        newOrder.setShipping_address(orderRequest.getShipping_address());
+        return newOrder;
     }
 }
