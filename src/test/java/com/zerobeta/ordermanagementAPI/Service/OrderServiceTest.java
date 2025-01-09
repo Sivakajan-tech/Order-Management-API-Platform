@@ -172,6 +172,23 @@ public class OrderServiceTest {
     }
 
     @Test
+    void testGetOrderHistory_LargePage() {
+        when(securityService.getAuthenticatedClient()).thenReturn(client);
+
+        List<Order> orders = Arrays.asList(order1, order2);
+        Page<Order> orderPage = new PageImpl<>(orders);
+        when(orderRepo.findByClientId(eq(client.getId()), any(PageRequest.class))).thenReturn(orderPage);
+
+        List<OrderResponseDTO> result = orderService.getOrderHistory(5, 3);
+
+        assertNotNull(result);
+        assertEquals(2, result.size());
+        assertEquals(orderPage.getTotalElements(), 2);
+
+        verify(orderRepo, times(2)).findByClientId(eq(client.getId()), any(PageRequest.class));
+    }
+
+    @Test
     void testGetOrderHistory_NotFound() {
         when(securityService.getAuthenticatedClient()).thenReturn(client);
 

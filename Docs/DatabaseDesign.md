@@ -2,9 +2,9 @@
 
 ### Entity-Relationship Diagram (ERD)
 - **Clients**:
-  - `id`, `email`, `password`, `firstName`, `lastName`.
+  - `client_id`, `email`, `password`, `first_name`, `last_name`.
 - **Orders**:
-  - `id`, `orderReference`, `itemName`, `quantity`, `shippingAddress`, `status`, `timestamp`, `client_id`.
+  - `order_id`, `order_name`, `quantity`, `shipping_address`, `status`, `created_at`, `client_id`.
 
 ### DDL Scripts
 ```sql

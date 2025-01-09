@@ -45,6 +45,8 @@ public class JWTFilter extends OncePerRequestFilter {
             token = authHeader.substring(authHeaderPrefix.length()); // Extract the token from the Authorization header
             authEmail = jwtService.extractUserName(token); // Extract the email from the token
         }
+
+        // If the email is extracted and the user is not already authenticated
         if (authEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {
 
             UserDetails userDetails = context
@@ -65,7 +67,7 @@ public class JWTFilter extends OncePerRequestFilter {
                         .setAuthentication(authToken);
             }
         }
-        
+
         filterChain.doFilter(request, response);
     }
 }

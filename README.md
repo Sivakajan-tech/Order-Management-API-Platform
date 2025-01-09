@@ -6,7 +6,7 @@ The Order Management API Platform is a backend service built using Java Spring B
 ---
 
 ## Features
-1. **User Authentication and Authorization**
+1. **User Authentication**
    - User signup with email, password, first name, and last name.
    - User login with email and password.
    - JWT-based security for all APIs (except signup and login).
@@ -31,6 +31,7 @@ The Order Management API Platform is a backend service built using Java Spring B
 - [Database Design](Docs/DatabaseDesign.md)
 - [API Documentation](Docs/APIDocumentation.md)
 - [Docker Guide](Docs/Docker-Guide.md)
+- [JWT Authentication](Docs/JWT.md)
 
 --- 
 
